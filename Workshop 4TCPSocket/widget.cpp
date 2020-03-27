@@ -1,4 +1,5 @@
 #include "widget.h"
+#include <QFileDialog>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -29,15 +30,20 @@ void Widget::progressingRequest(){
 }
 
 void Widget::readyRead(){
-    QByteArray ba;
+    QString str = QFileDialog::getOpenFileName(0, "Open Dialog", "", "*.cpp *.h");
+    QFile file(str);
+    QString fileName;
+    int i;
+    for(i = str.length(); (str[i] != '\\') && (str[i] != '/') && i >= 0; --i);
 
-    ba = pTcpSocket->readAll();
-    lblExchange->setText("request to send file:" + ba);
-    QFile file(ba);
+    while (str[++i] != '\0')
+        fileName += str[i];
+
+    lblExchange->setText("request to send file:" + fileName);
 
     if(file.exists()){
         file.open(QFile::ReadOnly);
-        lblFile->setText(ba);
+        lblFile->setText(fileName);
         lblSize->setText(QString::number(file.size()));
         pTcpSocket->write(file.readAll());
         lblExchange->setText("file sended");

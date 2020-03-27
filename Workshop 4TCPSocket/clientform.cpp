@@ -17,7 +17,6 @@ Clientform::Clientform(QWidget *parent) : QWidget(parent)
 
     connect(pTcpSocket, &QTcpSocket::connected,this,[&](){
         lblSocketState->setText("connected");
-        lblFileName->setText("ui_clientform.h");
         QByteArray ba("ui_clientform.h");
         pTcpSocket->write(ba);
         lblExchange->setText("filename sender");
